@@ -1,13 +1,13 @@
-name: JLMTR_Turbo_Guard
+name: JLMTR_Stealth_Guard
 on:
   schedule:
-    - cron: '*/9 * * * *'
+    - cron: '*/9 * * * *'  # 每 9 分鐘執行一次
   workflow_dispatch:
 
 jobs:
   browser_run:
     runs-on: ubuntu-latest
-    timeout-minutes: 10  # 設定 10 分鐘強制結束，防止卡死
+    timeout-minutes: 15
     steps:
       - name: 複製代碼
         uses: actions/checkout@v3
@@ -17,13 +17,12 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: 快速安裝環境
+      - name: 安裝環境與隱身插件
         run: |
-          pip install playwright
-          # 只裝 chromium，且不檢查系統依賴(已包含在 ubuntu-latest)
-          playwright install chromium
+          pip install playwright playwright-stealth
+          playwright install chromium --with-deps
 
-      - name: 執行 JLMTR 續期
+      - name: 執行 JLMTR 隱身續期
         env:
           FALIX_EMAIL: ${{ secrets.FALIX_EMAIL }}
           FALIX_PASSWORD: ${{ secrets.FALIX_PASSWORD }}
