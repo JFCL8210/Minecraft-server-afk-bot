@@ -1,7 +1,7 @@
-name: JLMTR_Stealth_Guard
+name: JLMTR_Final_Guard
 on:
   schedule:
-    - cron: '*/9 * * * *'  # 每 9 分鐘執行一次
+    - cron: '*/9 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -10,17 +10,18 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: 複製代碼
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 設定 Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
-      - name: 安裝環境與隱身插件
+      - name: 極速安裝環境
         run: |
           pip install playwright playwright-stealth
-          playwright install chromium --with-deps
+          # 僅安裝核心 Chromium，跳過所有不必要的依賴檢查
+          python -m playwright install chromium
 
       - name: 執行 JLMTR 隱身續期
         env:
