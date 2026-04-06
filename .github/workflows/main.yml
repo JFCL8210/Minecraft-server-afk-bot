@@ -1,14 +1,27 @@
-steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
+name: JLMTR_Ultimate_Guard
+on:
+  schedule:
+    - cron: '*/9 * * * *'  # 每 9 分鐘執行一次，對抗 10 分鐘自動關機
+  workflow_dispatch:      # 允許你手動點擊執行測試
+
+jobs:
+  browser_run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 複製代碼庫
+        uses: actions/checkout@v3
+
+      - name: 設定 Python 環境
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - name: 安裝瀏覽器環境
+
+      - name: 安裝瀏覽器模擬組件
         run: |
           pip install playwright
           playwright install chromium
-      - name: 執行模擬瀏覽器續期
+
+      - name: 執行 JLMTR 模擬登入
         env:
           FALIX_EMAIL: ${{ secrets.FALIX_EMAIL }}
           FALIX_PASSWORD: ${{ secrets.FALIX_PASSWORD }}
