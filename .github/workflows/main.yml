@@ -1,27 +1,31 @@
-name: JLMTR_Ultimate_Guard
+name: JLMTR_Fast_Guard
 on:
   schedule:
-    - cron: '*/9 * * * *'  # 每 9 分鐘執行一次，對抗 10 分鐘自動關機
-  workflow_dispatch:      # 允許你手動點擊執行測試
+    - cron: '*/9 * * * *'
+  workflow_dispatch:
 
 jobs:
   browser_run:
     runs-on: ubuntu-latest
+    # 設定整個 Job 的超時時間為 15 分鐘，防止它卡死
+    timeout-minutes: 15
     steps:
-      - name: 複製代碼庫
+      - name: 複製代碼
         uses: actions/checkout@v3
 
-      - name: 設定 Python 環境
+      - name: 設定 Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
-      - name: 安裝瀏覽器模擬組件
-        run: |
-          pip install playwright
-          playwright install chromium
+      - name: 安裝 Playwright 核心
+        run: pip install playwright
 
-      - name: 執行 JLMTR 模擬登入
+      - name: 安裝並快取瀏覽器
+        # 使用這個指令可以確保只安裝必要的 Chromium
+        run: playwright install chromium --with-deps
+
+      - name: 執行 JLMTR 續期
         env:
           FALIX_EMAIL: ${{ secrets.FALIX_EMAIL }}
           FALIX_PASSWORD: ${{ secrets.FALIX_PASSWORD }}
