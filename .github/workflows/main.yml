@@ -1,21 +1,21 @@
-name: JLMTR_High_Frequency_Renew
+name: JLMTR_Guard
 on:
   schedule:
-    - cron: '*/8 * * * *'  # 每 8 分鐘自動執行一次，防範 10 分鐘自動關機
-  workflow_dispatch:      # 允許手動點擊按鈕執行
+    - cron: '*/9 * * * *'  # 每 9 分鐘跑一次
+  workflow_dispatch:
 
 jobs:
-  build:
+  run-script:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3  # 這一步最重要，它會把檔案拉進機器人電腦
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - name: 安裝必要組件
+      - name: Install dependencies
         run: pip install requests
-      - name: 執行 JLMTR 續期任務
+      - name: Execute
         env:
           FALIX_EMAIL: ${{ secrets.FALIX_EMAIL }}
           FALIX_PASSWORD: ${{ secrets.FALIX_PASSWORD }}
