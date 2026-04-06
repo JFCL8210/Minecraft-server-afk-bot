@@ -1,21 +1,14 @@
-name: JLMTR_Guard
-on:
-  schedule:
-    - cron: '*/9 * * * *'  # 每 9 分鐘跑一次
-  workflow_dispatch:
-
-jobs:
-  run-script:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3  # 這一步最重要，它會把檔案拉進機器人電腦
+steps:
+      - uses: actions/checkout@v3
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - name: Install dependencies
-        run: pip install requests
-      - name: Execute
+      - name: 安裝瀏覽器環境
+        run: |
+          pip install playwright
+          playwright install chromium
+      - name: 執行模擬瀏覽器續期
         env:
           FALIX_EMAIL: ${{ secrets.FALIX_EMAIL }}
           FALIX_PASSWORD: ${{ secrets.FALIX_PASSWORD }}
